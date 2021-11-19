@@ -18,12 +18,12 @@ import {
   response,
 } from '@loopback/rest';
 import {Producto} from '../models';
-import {PersonaRepository} from '../repositories';
+import {ProductoRepository} from '../repositories';
 
 export class ProductoController {
   constructor(
-    @repository(PersonaRepository)
-    public personaRepository : PersonaRepository,
+    @repository(ProductoRepository)
+    public productoRepository : ProductoRepository,
   ) {}
 
   @post('/productos')
@@ -37,14 +37,14 @@ export class ProductoController {
         'application/json': {
           schema: getModelSchemaRef(Producto, {
             title: 'NewProducto',
-            exclude: ['id'],
+            
           }),
         },
       },
     })
-    producto: Omit<Producto, 'id'>,
+    producto: Producto,
   ): Promise<Producto> {
-    return this.personaRepository.create(producto);
+    return this.productoRepository.create(producto);
   }
 
   @get('/productos/count')
@@ -55,7 +55,7 @@ export class ProductoController {
   async count(
     @param.where(Producto) where?: Where<Producto>,
   ): Promise<Count> {
-    return this.personaRepository.count(where);
+    return this.productoRepository.count(where);
   }
 
   @get('/productos')
@@ -73,7 +73,7 @@ export class ProductoController {
   async find(
     @param.filter(Producto) filter?: Filter<Producto>,
   ): Promise<Producto[]> {
-    return this.personaRepository.find(filter);
+    return this.productoRepository.find(filter);
   }
 
   @patch('/productos')
@@ -92,7 +92,7 @@ export class ProductoController {
     producto: Producto,
     @param.where(Producto) where?: Where<Producto>,
   ): Promise<Count> {
-    return this.personaRepository.updateAll(producto, where);
+    return this.productoRepository.updateAll(producto, where);
   }
 
   @get('/productos/{id}')
@@ -108,7 +108,7 @@ export class ProductoController {
     @param.path.string('id') id: string,
     @param.filter(Producto, {exclude: 'where'}) filter?: FilterExcludingWhere<Producto>
   ): Promise<Producto> {
-    return this.personaRepository.findById(id, filter);
+    return this.productoRepository.findById(id, filter);
   }
 
   @patch('/productos/{id}')
@@ -126,7 +126,7 @@ export class ProductoController {
     })
     producto: Producto,
   ): Promise<void> {
-    await this.personaRepository.updateById(id, producto);
+    await this.productoRepository.updateById(id, producto);
   }
 
   @put('/productos/{id}')
@@ -137,7 +137,7 @@ export class ProductoController {
     @param.path.string('id') id: string,
     @requestBody() producto: Producto,
   ): Promise<void> {
-    await this.personaRepository.replaceById(id, producto);
+    await this.productoRepository.replaceById(id, producto);
   }
 
   @del('/productos/{id}')
@@ -145,6 +145,6 @@ export class ProductoController {
     description: 'Producto DELETE success',
   })
   async deleteById(@param.path.string('id') id: string): Promise<void> {
-    await this.personaRepository.deleteById(id);
+    await this.productoRepository.deleteById(id);
   }
 }
